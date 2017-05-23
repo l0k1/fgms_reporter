@@ -6,7 +6,7 @@ import csv
 from time import time
 from time import sleep
 
-delay = 5
+delay = 15
 
 debug = 1 # use this to turn a bunch of print statements on or off.
 
@@ -106,7 +106,7 @@ def loop():
                             parr[cs]['time'] = time()
                             parr[cs]['model'][model] = parr[cs]['model'][model] + update_time
                             if debug == 1:
-                                print(cs + " is moving more than 5kts, adding " + update_time + " to " + model)
+                                print(cs + " is moving at " + str(speed) + " m/s, adding " + str(update_time) + " to " + model)
                         elif debug == 1:
                             print(cs + " has not moved more than 5kts.")
                             

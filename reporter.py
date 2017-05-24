@@ -8,7 +8,10 @@ from time import sleep
 
 delay = 10
 
-debug = 0 # use this to turn a bunch of print statements on or off.
+debug = 1   # use this to turn a bunch of print statements on or off.
+            # 2 prints a lot, 1 prints logging stuff.
+
+print("Starting FGMS Reporter!")
 
 # make sure the config file exists.
 try:
@@ -43,10 +46,10 @@ except FileNotFoundError as e:
         print("db.pickle not found, creating default db.pickle...")
 finally:
     _.close()
-    
+
 # main loop
-def loop():
-    if debug == 1:
+while True:
+    if debug == 2:
         print("beginning main loop")
     #config stuff
     conf = configparser.ConfigParser()
@@ -81,14 +84,14 @@ def loop():
         for d in data:
             if d.find('@') != -1 and d.split('@')[0] == cs:
                 found = 1
-                if debug == 1:
-                    print("found " + cs + " online.")
                 extract = d.split('@')[1].split(' ')
                 model = extract[10].split('/')[-1].split('.xml')[0]
+                if debug == 2:
+                    print("Dected " + cs + " online using model " + model + ".")
                 if model in parr[cs]['model']:
                     if ( parr[cs]['active'] == 0 ) or ( parr[cs]['active'] == 1 and parr[cs]['lastmodel'] != model ) :
-                        if debug == 1:
-                            print(cs + " was not online or the model changed. setting up...")
+                        if debug == 2:
+                            print(cs + " has been detected online as newly active or the model has changed.")
                         parr[cs]['lastmodel'] = model
                         parr[cs]['time'] = time()
                         parr[cs]['x'] = float(extract[1])
@@ -107,14 +110,16 @@ def loop():
                         speed = distance / update_time # in meters/second
                         if speed > 2.57: #i.e. 5 knots
                             parr[cs]['model'][model] = parr[cs]['model'][model] + update_time
-                            if debug == 1:
+                            if debug == 2:
                                 print(cs + " is moving at " + str(speed) + " m/s, adding " + str(update_time) + " to " + model)
-                        elif debug == 1:
+                        elif debug == 2:
                             print(cs + " has not moved more than 5kts.")
                         parr[cs]['time'] = time()
                         parr[cs]['x'] = x1
                         parr[cs]['y'] = y1
                         parr[cs]['z'] = z1
+        if debug >= 1 and parr[cs]['active'] == 1 and found == 0:
+            print(cs + " is no longer online.")
         parr[cs]['active'] = found
 
     # now need to export parr to csv and to pickle DB.
@@ -134,6 +139,3 @@ def loop():
     
     # wait -delay- seconds and run 'er again!
     sleep(delay)
-    loop()
-    
-loop()

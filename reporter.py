@@ -5,10 +5,11 @@ import math
 import csv
 from time import time
 from time import sleep
+from datetime import datetime
 
 delay = 10
 
-debug = 1   # use this to turn a bunch of print statements on or off.
+debug = 2   # use this to turn a bunch of print statements on or off.
             # 2 prints a lot, 1 prints logging stuff.
 
 print("Starting FGMS Reporter!")
@@ -19,8 +20,8 @@ try:
 except FileNotFoundError as e:
     _ = open("config.ini","xt")
     print("[general]\ncallsigns=pinto|PINTO|Leto|USAF001\naircraft=JA37-Viggen|AJ37-Viggen|AJS37-Viggen|F-15C\nservers=mpserver01.flightgear.org",file=_)
-    if debug == 1:
-        print("config.ini not found, creating default config.ini...")
+    if debug >= 1:
+        print(str(datetime.now()) +" // config.ini not found, creating default config.ini...")
 finally:
     _.close()
     
@@ -31,8 +32,8 @@ except FileNotFoundError as e:
     _ = open("output.csv","xt")
     # parr[cs] = {'active':0,'lastmodel':"",'x':0,'y':0,'z':0,'lat':0,'lon':0,'time':0,'model':{}}
     print("callsign,model,eft",file=_)
-    if debug == 1:
-        print("output.csv not found, creating default output.csv...")
+    if debug >= 1:
+        print(str(datetime.now()) +" // output.csv not found, creating default output.csv...")
 finally:
     _.close
 
@@ -42,15 +43,15 @@ try:
 except FileNotFoundError as e:
     _ = open("db.pickle","xb")
     pickle.dump({},_)
-    if debug == 1:
-        print("db.pickle not found, creating default db.pickle...")
+    if debug >= 1:
+        print(str(datetime.now()) +" // db.pickle not found, creating default db.pickle...")
 finally:
     _.close()
 
 # main loop
 while True:
     if debug == 2:
-        print("beginning main loop")
+        print(str(datetime.now()) +" // beginning main loop")
     #config stuff
     conf = configparser.ConfigParser()
     conf.read('config.ini')
@@ -87,11 +88,11 @@ while True:
                 extract = d.split('@')[1].split(' ')
                 model = extract[10].split('/')[-1].split('.xml')[0]
                 if debug >= 1:
-                    print("Detected " + cs + " online using model " + model + ".")
+                    print(str(datetime.now()) +" // Detected " + cs + " online using model " + model + ".")
                 if model in parr[cs]['model']:
                     if ( parr[cs]['active'] == 0 ) or ( parr[cs]['active'] == 1 and parr[cs]['lastmodel'] != model ) :
                         if debug == 2:
-                            print(cs + " has been detected online as newly active or the model has changed.")
+                            print(str(datetime.now()) +" // " + cs + " has been detected online as newly active or the model has changed.")
                         parr[cs]['lastmodel'] = model
                         parr[cs]['time'] = time()
                         parr[cs]['x'] = float(extract[1])
@@ -111,15 +112,15 @@ while True:
                         if speed > 2.57: #i.e. 5 knots
                             parr[cs]['model'][model] = parr[cs]['model'][model] + update_time
                             if debug == 2:
-                                print(cs + " is moving at " + str(speed) + " m/s, adding " + str(update_time) + " to " + model)
+                                print(str(datetime.now()) +" // " + cs + " is moving at " + str(speed) + " m/s, adding " + str(update_time) + " to " + model)
                         elif debug == 2:
-                            print(cs + " has not moved more than 5kts.")
+                            print(str(datetime.now()) +" // " + cs + " has not moved more than 5kts.")
                         parr[cs]['time'] = time()
                         parr[cs]['x'] = x1
                         parr[cs]['y'] = y1
                         parr[cs]['z'] = z1
         if debug >= 1 and parr[cs]['active'] == 1 and found == 0:
-            print(cs + " is no longer online.")
+            print(str(datetime.now()) +" // " + cs + " is no longer online.")
         parr[cs]['active'] = found
 
     # now need to export parr to csv and to pickle DB.

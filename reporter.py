@@ -6,9 +6,9 @@ import csv
 from time import time
 from time import sleep
 
-delay = 15
+delay = 10
 
-debug = 1 # use this to turn a bunch of print statements on or off.
+debug = 0 # use this to turn a bunch of print statements on or off.
 
 # make sure the config file exists.
 try:
@@ -16,7 +16,8 @@ try:
 except FileNotFoundError as e:
     _ = open("config.ini","xt")
     print("[general]\ncallsigns=pinto|PINTO|Leto|USAF001\naircraft=JA37-Viggen|AJ37-Viggen|AJS37-Viggen|F-15C\nservers=mpserver01.flightgear.org",file=_)
-    print("config.ini not found, creating default config.ini...")
+    if debug == 1:
+        print("config.ini not found, creating default config.ini...")
 finally:
     _.close()
     
@@ -27,7 +28,8 @@ except FileNotFoundError as e:
     _ = open("output.csv","xt")
     # parr[cs] = {'active':0,'lastmodel':"",'x':0,'y':0,'z':0,'lat':0,'lon':0,'time':0,'model':{}}
     print("callsign,model,eft",file=_)
-    print("output.csv not found, creating default output.csv...")
+    if debug == 1:
+        print("output.csv not found, creating default output.csv...")
 finally:
     _.close
 
@@ -37,7 +39,8 @@ try:
 except FileNotFoundError as e:
     _ = open("db.pickle","xb")
     pickle.dump({},_)
-    print("db.pickle not found, creating default db.pickle...")
+    if debug == 1:
+        print("db.pickle not found, creating default db.pickle...")
 finally:
     _.close()
     

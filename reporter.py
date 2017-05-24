@@ -12,7 +12,7 @@ delay = 10
 debug = 1   # use this to turn a bunch of print statements on or off.
             # 2 prints a lot, 1 prints logging stuff.
 
-print("Starting FGMS Reporter!")
+print(str(datetime.now()) +" // Starting FGMS Reporter!")
 
 # make sure the config file exists.
 try:

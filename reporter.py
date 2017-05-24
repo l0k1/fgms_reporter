@@ -9,7 +9,7 @@ from datetime import datetime
 
 delay = 10
 
-debug = 2   # use this to turn a bunch of print statements on or off.
+debug = 1   # use this to turn a bunch of print statements on or off.
             # 2 prints a lot, 1 prints logging stuff.
 
 print("Starting FGMS Reporter!")

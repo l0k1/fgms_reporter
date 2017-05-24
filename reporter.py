@@ -103,13 +103,12 @@ def loop():
                         update_time = time() - parr[cs]['time']
                         speed = distance / update_time # in meters/second
                         if speed > 2.57: #i.e. 5 knots
-                            parr[cs]['time'] = time()
                             parr[cs]['model'][model] = parr[cs]['model'][model] + update_time
                             if debug == 1:
                                 print(cs + " is moving at " + str(speed) + " m/s, adding " + str(update_time) + " to " + model)
                         elif debug == 1:
                             print(cs + " has not moved more than 5kts.")
-                            
+                        parr[cs]['time'] = time()
                         parr[cs]['x'] = x1
                         parr[cs]['y'] = y1
                         parr[cs]['z'] = z1

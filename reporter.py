@@ -87,7 +87,7 @@ while True:
                 found = 1
                 extract = d.split('@')[1].split(' ')
                 model = extract[10].split('/')[-1].split('.xml')[0]
-                if debug >= 1:
+                if debug >= 1 and parr[cs]['active'] == 0:
                     print(str(datetime.now()) +" // Detected " + cs + " online using model " + model + ".")
                 if model in parr[cs]['model']:
                     if ( parr[cs]['active'] == 0 ) or ( parr[cs]['active'] == 1 and parr[cs]['lastmodel'] != model ) :

@@ -131,10 +131,10 @@ while True:
     csv_file = open('output.csv','wt')
     try:
         writer = csv.writer(csv_file)
-        writer.writerow(('callsign','model','eft'))
+        writer.writerow(('callsign','model','eft','last update time: ' + str(time())))
         for cs in parr:
             for model in parr[cs]['model']:
-                writer.writerow((cs,model,parr[cs]['model'][model]))
+                writer.writerow((cs,model,parr[cs]['model'][model],str(parr[cs]['time'])))
     finally:
         csv_file.close()
     

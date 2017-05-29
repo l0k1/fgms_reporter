@@ -69,9 +69,12 @@ while True:
     #telnet stuff - aggregate our data.
     data = ""
     for server in servers:
-        tn = telnetlib.Telnet(server,5001)
-        data = data + str(tn.read_all())
-        tn.close()
+        try:
+            tn = telnetlib.Telnet(server,5001)
+            data = data + str(tn.read_all())
+            tn.close()
+        except:
+            print(str(datetime.now()) + " // Unable to establish a connection with " + str(server))
     data = data.split('\\n')
     
     # make sure we have everybody in parr.

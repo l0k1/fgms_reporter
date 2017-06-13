@@ -7,10 +7,12 @@ from time import time
 from time import sleep
 from datetime import datetime
 
-delay = 10
+delay = 15
 
 debug = 1   # use this to turn a bunch of print statements on or off.
             # 2 prints a lot, 1 prints logging stuff.
+            
+runs = 0
 
 print(str(datetime.now()) +" // Starting FGMS Reporter!")
 
@@ -77,6 +79,8 @@ while True:
             print(str(datetime.now()) + " // Unable to establish a connection with " + str(server))
     data = data.split('\\n')
     
+    runs = runs + 1
+    
     # make sure we have everybody in parr.
     for cs in callsigns:
         if not cs in parr:
@@ -91,7 +95,7 @@ while True:
                 extract = d.split('@')[1].split(' ')
                 model = extract[10].split('/')[-1].split('.xml')[0]
                 if debug >= 1 and parr[cs]['active'] == 0:
-                    print(str(datetime.now()) +" // Detected " + cs + " online using model " + model + ".")
+                    print(str(datetime.now()) + " // runs: " + str(runs) + " // Detected " + cs + " online using model " + model + ".")
                 if model in parr[cs]['model']:
                     if ( parr[cs]['active'] == 0 ) or ( parr[cs]['active'] == 1 and parr[cs]['lastmodel'] != model ) :
                         if debug == 2:
@@ -122,8 +126,10 @@ while True:
                         parr[cs]['x'] = x1
                         parr[cs]['y'] = y1
                         parr[cs]['z'] = z1
+                else:
+                    parr[cs]['lastmodel'] = "none"
         if debug >= 1 and parr[cs]['active'] == 1 and found == 0:
-            print(str(datetime.now()) +" // " + cs + " is no longer online.")
+            print(str(datetime.now()) + " // runs: " + str(runs) + " // " + cs + " is no longer online.")
         parr[cs]['active'] = found
 
     # now need to export parr to csv and to pickle DB.
@@ -143,3 +149,4 @@ while True:
     
     # wait -delay- seconds and run 'er again!
     sleep(delay)
+    

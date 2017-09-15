@@ -9,7 +9,7 @@ from datetime import datetime
 
 delay = 15
 
-debug = 1   # use this to turn a bunch of print statements on or off.
+debug = 2   # use this to turn a bunch of print statements on or off.
             # 2 prints a lot, 1 prints logging stuff.
             
 runs = 0
@@ -60,6 +60,8 @@ while True:
     callsigns = str(conf.get('general','callsigns')).split('|')
     aircraft = str(conf.get('general','aircraft')).split('|')
     servers = str(conf.get('general','servers')).split('|')
+    if debug == 2:
+        print(str(datetime.now()) +" // config file has been read.")
     
     #database stuff
     pickle_file = open('db.pickle','rb')
@@ -67,6 +69,8 @@ while True:
     pickle_file.close()
     if parr == None:
         parr = {}
+    if debug == 2:
+        print(str(datetime.now()) + " // database successfully loaded.")
         
     #telnet stuff - aggregate our data.
     data = ""
@@ -75,6 +79,8 @@ while True:
             tn = telnetlib.Telnet(server,5001)
             data = data + str(tn.read_all())
             tn.close()
+            if debug == 2:
+                print(str(datetime.now()) + " // pulled data from " + str(server))
         except:
             print(str(datetime.now()) + " // Unable to establish a connection with " + str(server))
     data = data.split('\\n')

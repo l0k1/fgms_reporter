@@ -5,6 +5,7 @@ import math
 import csv
 from time import time
 from time import sleep
+from pathlib import Path
 from datetime import datetime
 
 delay = 15
@@ -14,13 +15,15 @@ debug = 2   # use this to turn a bunch of print statements on or off.
             
 runs = 0
 
+home = str(Path.home()) +  '/fgms_reporter/'
+
 print(str(datetime.now()) +" // Starting FGMS Reporter!")
 
 # make sure the config file exists.
 try:
-    _ = open("config.ini","rt")
+    _ = open(home + "config.ini","rt")
 except FileNotFoundError as e:
-    _ = open("config.ini","xt")
+    _ = open(home + "config.ini","xt")
     print("[general]\ncallsigns=pinto|PINTO|Leto|USAF001\naircraft=JA37-Viggen|AJ37-Viggen|AJS37-Viggen|F-15C\nservers=mpserver01.flightgear.org",file=_)
     if debug >= 1:
         print(str(datetime.now()) +" // config.ini not found, creating default config.ini...")
@@ -29,9 +32,9 @@ finally:
     
 # make sure the csv file exists
 try:
-    _ = open("output.csv","rt")
+    _ = open(home + "output.csv","rt")
 except FileNotFoundError as e:
-    _ = open("output.csv","xt")
+    _ = open(home + "output.csv","xt")
     # parr[cs] = {'active':0,'lastmodel':"",'x':0,'y':0,'z':0,'lat':0,'lon':0,'time':0,'model':{}}
     print("callsign,model,eft",file=_)
     if debug >= 1:
@@ -41,9 +44,9 @@ finally:
 
 # make sure the pickle database exists
 try:
-    _ = open("db.pickle","rb")
+    _ = open(home + "db.pickle","rb")
 except FileNotFoundError as e:
-    _ = open("db.pickle","xb")
+    _ = open(home + "db.pickle","xb")
     pickle.dump({},_)
     if debug >= 1:
         print(str(datetime.now()) +" // db.pickle not found, creating default db.pickle...")
@@ -56,7 +59,7 @@ while True:
         print(str(datetime.now()) +" // beginning main loop")
     #config stuff
     conf = configparser.ConfigParser()
-    conf.read('config.ini')
+    conf.read(home + 'config.ini')
     callsigns = str(conf.get('general','callsigns')).split('|')
     aircraft = str(conf.get('general','aircraft')).split('|')
     servers = str(conf.get('general','servers')).split('|')
@@ -64,7 +67,7 @@ while True:
         print(str(datetime.now()) +" // config file has been read.")
     
     #database stuff
-    pickle_file = open('db.pickle','rb')
+    pickle_file = open(home + 'db.pickle','rb')
     parr = pickle.load(pickle_file)
     pickle_file.close()
     if parr == None:
@@ -139,11 +142,11 @@ while True:
         parr[cs]['active'] = found
 
     # now need to export parr to csv and to pickle DB.
-    pickle_file = open('db.pickle','wb')
+    pickle_file = open(home + 'db.pickle','wb')
     pickle.dump(parr,pickle_file)
     pickle_file.close()
     
-    csv_file = open('output.csv','wt')
+    csv_file = open(home + 'output.csv','wt')
     try:
         writer = csv.writer(csv_file)
         writer.writerow(('callsign','model','eft','last update time: ' + str(datetime.now())))

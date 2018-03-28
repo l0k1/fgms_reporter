@@ -24,7 +24,7 @@ try:
     _ = open(home + "config.ini","rt")
 except FileNotFoundError as e:
     _ = open(home + "config.ini","xt")
-    print("[general]\ncallsigns=pinto|PINTO|Leto|USAF001\naircraft=JA37-Viggen|AJ37-Viggen|AJS37-Viggen|F-15C\nservers=mpserver01.flightgear.org",file=_)
+    print("[general]\ncallsigns=pinto|PINTO|Leto|USAF001\naircraft=JA37-Viggen|AJ37-Viggen|AJS37-Viggen|F-15C\nservers=mpserver01.flightgear.org\nports=5001",file=_)
     if debug >= 1:
         print(str(datetime.now()) +" // config.ini not found, creating default config.ini...")
 finally:
@@ -63,6 +63,7 @@ while True:
     callsigns = str(conf.get('general','callsigns')).split('|')
     aircraft = str(conf.get('general','aircraft')).split('|')
     servers = str(conf.get('general','servers')).split('|')
+    ports = str(conf.get('general','ports')).split('|')
     if debug == 2:
         print(str(datetime.now()) +" // config file has been read.")
     
@@ -79,7 +80,7 @@ while True:
     data = ""
     for server in servers:
         try:
-            tn = telnetlib.Telnet(server,5001)
+            tn = telnetlib.Telnet(server,int(ports[servers.index(server)]))
             data = data + str(tn.read_all())
             tn.close()
             if debug == 2:

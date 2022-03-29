@@ -1,15 +1,15 @@
 # FGMS Reporter
 
 A simple time-tracking utility for FlightGear multiplayer.
-This can pull from any fgms server, as long as that server has
-default telnet connections enabled on port 5001.
+This can pull from any fgms server.
 
 Time will be tracked for each listed pilot if that pilot is
 moving over 5 knots in speed.
 
 # Usage
 
-Create a config.ini file with the following format:
+Edit the file config.ini and change or add the callsigns, aircraft models 
+and servers you want to track.
 
 ```
 [general]
